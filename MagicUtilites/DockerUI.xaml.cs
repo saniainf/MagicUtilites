@@ -44,8 +44,8 @@ namespace MagicUtilites
         {
             MakeToAllPages((s) =>
             {
-                if (s.Type == corel.cdrShapeType.cdrTextShape)
-                    s.ConvertToCurves();
+                if (s.Type == corel.cdrShapeType.cdrTextShape) // если текст
+                    s.ConvertToCurves(); // перевести в кривые
             });
         }
 
@@ -53,9 +53,9 @@ namespace MagicUtilites
         {
             MakeToAllPages((s) =>
             {
-                if (s.Type == corel.cdrShapeType.cdrBitmapShape)
-                    if (s.Bitmap.Mode != corel.cdrImageType.cdrCMYKColorImage)
-                        s.Bitmap.ConvertTo(corel.cdrImageType.cdrCMYKColorImage);
+                if (s.Type == corel.cdrShapeType.cdrBitmapShape) // если картинка
+                    if (s.Bitmap.Mode != corel.cdrImageType.cdrCMYKColorImage) // цветовая модель не CMYK
+                        s.Bitmap.ConvertTo(corel.cdrImageType.cdrCMYKColorImage); // конвертировать в CMYK
             });
         }
 
@@ -63,10 +63,10 @@ namespace MagicUtilites
         {
             MakeToAllPages((s) =>
             {
-                if (s.CanHaveFill)
-                    if (s.Fill.Type == corel.cdrFillType.cdrUniformFill)
-                        if (s.Fill.UniformColor.Type != corel.cdrColorType.cdrColorCMYK)
-                            s.Fill.UniformColor.ConvertToCMYK();
+                if (s.CanHaveFill) // у объекта может быть заливка
+                    if (s.Fill.Type == corel.cdrFillType.cdrUniformFill) // заливка сплошная
+                        if (s.Fill.UniformColor.Type != corel.cdrColorType.cdrColorCMYK) // цветовая модель не CMYK
+                            s.Fill.UniformColor.ConvertToCMYK(); // конвертировать в CMYK
             });
         }
 
@@ -74,10 +74,10 @@ namespace MagicUtilites
         {
             MakeToAllPages((s) =>
             {
-                if (s.CanHaveOutline)
-                    if (s.Outline.Type == corel.cdrOutlineType.cdrOutline)
-                        if (s.Outline.Color.Type != corel.cdrColorType.cdrColorCMYK)
-                            s.Outline.Color.ConvertToCMYK();
+                if (s.CanHaveOutline) // у объекта может быть обводка
+                    if (s.Outline.Type == corel.cdrOutlineType.cdrOutline) // обводка есть
+                        if (s.Outline.Color.Type != corel.cdrColorType.cdrColorCMYK) // цветовая модель не CMYK
+                            s.Outline.Color.ConvertToCMYK(); // конвертировать в CMYK
             });
         }
 
@@ -85,13 +85,13 @@ namespace MagicUtilites
         {
             MakeToAllPages((s) =>
             {
-                if (s.CanHaveFill)
-                    if (s.Fill.Type == corel.cdrFillType.cdrFountainFill)
+                if (s.CanHaveFill) // у объекта может быть заливка
+                    if (s.Fill.Type == corel.cdrFillType.cdrFountainFill) // заливка градиент
                     {
-                        foreach (corel.FountainColor c in s.Fill.Fountain.Colors)
+                        foreach (corel.FountainColor c in s.Fill.Fountain.Colors) // перебор всех ключей в градиенте
                         {
-                            if (c.Color.Type != corel.cdrColorType.cdrColorCMYK)
-                                c.Color.ConvertToCMYK();
+                            if (c.Color.Type != corel.cdrColorType.cdrColorCMYK) // цветовая модель не CMYK
+                                c.Color.ConvertToCMYK(); // конвертировать в CMYK
                         }
                     }
             });
@@ -102,9 +102,9 @@ namespace MagicUtilites
             MakeToAllPages((s) =>
             {
                 int resolution = 300;
-                if (s.Type == corel.cdrShapeType.cdrBitmapShape)
-                    if (s.Bitmap.ResolutionX != resolution || s.Bitmap.ResolutionY != resolution)
-                        s.Bitmap.Resample(0, 0, true, resolution, resolution);
+                if (s.Type == corel.cdrShapeType.cdrBitmapShape) // если картинка
+                    if (s.Bitmap.ResolutionX != resolution || s.Bitmap.ResolutionY != resolution) // разрешение не совпадает с заданным
+                        s.Bitmap.Resample(0, 0, true, resolution, resolution); // изменяем разрешение на заданное
             });
         }
 
@@ -120,7 +120,7 @@ namespace MagicUtilites
             corelApp.EndDraw();
         }
 
-        private void MakeToShapeRange(corel.ShapeRange sr, Action<corel.Shape> action) // ShapeRange представляет коллекцию corel объектов
+        private void MakeToShapeRange(corel.ShapeRange sr, Action<corel.Shape> action)
         {
             foreach (corel.Shape shape in sr)
             {
